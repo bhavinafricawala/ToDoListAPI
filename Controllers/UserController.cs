@@ -12,15 +12,15 @@ namespace ToDoListAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class UserController : ControllerBase
     {
-
         private readonly UserRepository userRepository;
 
-        public ValuesController(IConfiguration configuration)
+        public UserController(IConfiguration configuration)
         {
             userRepository = new UserRepository(configuration);
         }
+
         // GET api/values
         [HttpGet]
         [EnableCors("MyPolicy")]
@@ -31,27 +31,34 @@ namespace ToDoListAPI.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        [EnableCors("MyPolicy")]
+        public ActionResult<User> Get(int id)
         {
-            return "value";
+            return userRepository.FindByID(id);
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        [EnableCors("MyPolicy")]
+        public void Post(User user)
         {
+            userRepository.Add(user);
         }
 
         // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        [EnableCors("MyPolicy")]
+        public void Put(User user)
         {
+            userRepository.Update(user);
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
+        [EnableCors("MyPolicy")]
         public void Delete(int id)
         {
+            userRepository.Remove(id);
         }
     }
 }

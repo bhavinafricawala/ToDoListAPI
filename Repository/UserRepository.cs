@@ -32,7 +32,8 @@ namespace ToDoListAPI.Repository
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                dbConnection.Query<User>("INSERT INTO Users(Name, Email) VALUES('" + item.Name + "','" + item.Email + "')");
+                var query = "INSERT INTO Users(Name, Email, Password) VALUES(@Name, @Email, @Password)";
+                dbConnection.Query<User>(query, item);
             }
         }
 
@@ -50,7 +51,8 @@ namespace ToDoListAPI.Repository
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.Query<User>("SELECT * FROM Users WHERE ID=" + id.ToString()).FirstOrDefault();
+                var query = "SELECT * FROM Users WHERE ID=@id";
+                return dbConnection.Query<User>(query, new { id }).FirstOrDefault();
             }
         }
 
@@ -59,7 +61,8 @@ namespace ToDoListAPI.Repository
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                dbConnection.Query<User>("DELETE FROM Users WHERE ID=" + id);
+                var query = "DELETE FROM Users WHERE ID=@id";
+                dbConnection.Query<User>(query, new { id });
             }
         }
 
@@ -68,7 +71,28 @@ namespace ToDoListAPI.Repository
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                dbConnection.Query<User>("UPDATE Users SET Name='" + item.Name + "', Email='" + item.Email + "' WHERE ID=" + item.ID);
+                var query = "UPDATE Users SET Name=@Name, Email=@Email, Password=@Password WHERE ID=@ID";
+                dbConnection.Query<User>(query, item);
+            }
+        }
+
+        public void UpdatePasswordByID(User user)
+        {
+            using (IDbConnection dbConnection = Connection)
+            {
+                dbConnection.Open();
+                var query = "UPDATE Users SET Password=@Password WHERE ID=@ID";
+                dbConnection.Query<User>(query, user);
+            }
+        }
+
+        public User FindUserByEmail(string Email)
+        {
+            using (IDbConnection dbConnection = Connection)
+            {
+                dbConnection.Open();
+                var query = "SELECT * FROM Users WHERE Email=@Email";
+                return dbConnection.Query<User>(query, new { Email }).FirstOrDefault();
             }
         }
     }
