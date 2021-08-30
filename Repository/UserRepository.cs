@@ -42,7 +42,16 @@ namespace ToDoListAPI.Repository
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.Query<User>("SELECT * FROM Users");
+                var query = @"SELECT Users.Id, Users.Name, Users.Email, Users.Password,
+                                ToDos.Id, ToDos.ToDoText, ToDos.CreatedDate
+                                FROM Users
+                                INNER JOIN ToDos ON ToDos.UserId=Users.Id";
+                return dbConnection.Query<User, ToDo, User>(query, (user, todo) =>
+                {
+                    user.ToDos.Add(todo);
+
+                    return user;
+                }).ToList();
             }
         }
 

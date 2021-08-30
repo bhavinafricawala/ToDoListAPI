@@ -6,25 +6,18 @@ using System.Threading.Tasks;
 
 namespace ToDoListAPI.Models
 {
-    public class User : BaseEntity
+    public class ToDo : BaseEntity
     {
         [Key]
         public int ID { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public string ToDoText { get; set; }
 
         [Required]
-        public string Email { get; set; }
+        public User user { get; set; }
 
         [Required]
-        public string Password { get; set; }
-
-        public List<ToDo> ToDos { get; set; }
-
-        public User()
-        {
-            ToDos = new List<ToDo>();
-        }
+        public DateTime CreateDate { get; set; }
     }
 }

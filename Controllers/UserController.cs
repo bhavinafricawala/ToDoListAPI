@@ -26,7 +26,8 @@ namespace ToDoListAPI.Controllers
         [EnableCors("MyPolicy")]
         public ActionResult<IEnumerable<User>> Get()
         {
-            return userRepository.FindAll().ToList();
+            var users = userRepository.FindAll().ToList();
+            return users;
         }
 
         // GET api/values/5
