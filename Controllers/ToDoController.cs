@@ -23,34 +23,43 @@ namespace ToDoListAPI.Controllers
 
         // GET: api/ToDo
         [HttpGet]
-        public IEnumerable<ToDo> Get()
+        public ActionResult<IEnumerable<ToDo>> Get()
         {
-            return todoRepository.FindAll();
+            return todoRepository.FindAll().ToList();
+        }
+
+        [HttpGet("{userid}", Name = "Get")]
+        public ActionResult<IEnumerable<ToDo>> GetByUserId(int userId)
+        {
+            return todoRepository.FindAllByUser(userId).ToList();
         }
 
         // GET: api/ToDo/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public ActionResult<ToDo> Get(int id)
         {
-            return "value";
+            return todoRepository.FindByID(id);
         }
 
         // POST: api/ToDo
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post(ToDo toDo)
         {
+            todoRepository.Add(toDo);
         }
 
         // PUT: api/ToDo/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(ToDo toDo)
         {
+            todoRepository.Update(toDo);
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            todoRepository.Remove(id);
         }
     }
 }

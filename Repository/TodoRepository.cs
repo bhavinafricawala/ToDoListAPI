@@ -71,6 +71,23 @@ namespace ToDoListAPI.Repository
             }
         }
 
+        public IEnumerable<ToDo> FindAllByUser(int userId)
+        {
+            using (IDbConnection db = Connection)
+            {
+                db.Open();
+                var query = @"SELECT ToDos.ID, ToDos.todotext, ToDos.UserId, ToDos.CreatedDate,
+                        Users.Id, Users.Name, Users.Email, Users.Password
+                        FROM ToDos INNER JOIN Users ON ToDos.UserId=Users.Id
+                        WHERE ToDos.ID=@userid";
+                return db.Query<ToDo, User, ToDo>(query, (todo, user) =>
+                {
+                    todo.user = user;
+                    return todo;
+                }, new { userId }).ToList();
+            }
+        }
+
         public void Remove(int id)
         {
             using (IDbConnection db = Connection)
